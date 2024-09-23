@@ -20,7 +20,6 @@ class ExcelPreviewController extends Controller
 
     public function import(Request $request) {
         // Validate file 
-        // dd($request->all());
         $request->validate([
             'file' => 'required|file|mimes:xls,xlsx'
         ]);
