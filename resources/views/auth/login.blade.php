@@ -28,29 +28,29 @@
       @endif
       <form action="{{ url('auth/login') }}" method="POST">
         @csrf
-        <div class="input-group mb-3">
+        <div class="input-group">
           <input type="email" class="form-control" name="email" value="{{old('email')}}" placeholder="Email">
           <div class="input-group-append">
             <div class="input-group-text">
               <span class="fas fa-envelope"></span>
             </div>
           </div>               
-            @if ($errors->has('email'))
-             <span class="text-danger">{{ $errors->first('email') }}</span>
-            @endif
         </div>
-        <div class="input-group mb-3">
+        @if ($errors->has('email'))
+         <span class="text-danger">{{ $errors->first('email') }}</span>
+        @endif
+        <div class="input-group mt-3">
           <input type="password" name="password" value="{{old('password')}}" class="form-control" placeholder="Password">
           <div class="input-group-append">
             <div class="input-group-text">
               <span class="fas fa-lock"></span>
             </div>
           </div>              
-            @if ($errors->has('password'))
-              <span class="text-danger">{{ $errors->first('password') }}</span>
-            @endif
         </div>
-        <div class="input-group mb-3">
+        @if ($errors->has('password'))
+          <span class="text-danger">{{ $errors->first('password') }}</span>
+        @endif
+        <div class="input-group mt-3 mb-3">
           <input type="password_confirmation" name ="password_confirmation" class="form-control" placeholder="Confirm password">
           <div class="input-group-append">
             <div class="input-group-text">
