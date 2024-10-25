@@ -44,6 +44,7 @@ class ForgetPasswordController extends Controller
         );
     }
 
+
     public function showResetPasswordForm($token) { 
         return view('auth.forgetPasswordLink', ['token' => $token]);
 
