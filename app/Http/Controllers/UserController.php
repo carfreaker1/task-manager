@@ -75,19 +75,17 @@ class UserController extends Controller
 
     }
     public function updateUser(Request $request,$id){
-    // dd($request->all());
-
+        
         $request->validate([
             'name' => 'required',
-            'email' => 'required|email|email|unique:users,email',
+            'email' => 'required|email',
             'department' => 'required',
             'designation' => 'required',
             'role' => 'required',
-
+            
         ]); 
 
         User::where('id',$id)->update([
-        
             'name' => $request->name,
             'email' => $request->email,
             'department_id' => $request->department,

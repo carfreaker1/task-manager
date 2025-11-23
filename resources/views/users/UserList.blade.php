@@ -34,7 +34,7 @@
                     $(document).ready(function() {
                       $(document).Toasts('create', {
                         title: 'User',
-                        body: 'User Created Succesfully'
+                        body: 'User Updated Succesfully'
                     })
                     $(".toast").addClass('bg-success')
                     });    

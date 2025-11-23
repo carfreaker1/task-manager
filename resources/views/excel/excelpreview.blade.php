@@ -83,7 +83,6 @@
                     $(".toast").addClass('bg-success')
                     });    
                   </script>
-                  jaise dekha abhi kuch smajo pyraar se in the end krna muje wahi hai jo mera mnn krega fir mai kya apni maa chudwane ko smaja rha u apni
               @elseif (session('deletedesig'))
                   {{-- <p class="alert alert-success text-center alert-dismissible">{{ session('deletedesig') }}</p> --}}
                   <script>

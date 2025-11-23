@@ -38,16 +38,15 @@ Route::group(['middleware'=>'guest'],function(){
         Route::post('reset-password', 'submitResetPasswordForm')->name('resetpasswordpost');
     
     });
-    Route::get('user', [UserController::class,'registerUser'])->name('registeruser');
 });
 
 
 
 Route::group(['middleware'=>'auth'],function(){
-
+    
     /** * Logout Route */
     Route::get('/logout',[LoginCotroller::class,'logout'])->name('logout');
-
+    
     // Routes For Roles
     Route::controller(RolesController::class)->group(function(){
         Route::get('create/role', 'createRole')->name('createrole');
@@ -56,13 +55,14 @@ Route::group(['middleware'=>'auth'],function(){
         Route::get('edit/role/{id}', 'editRole')->name('editrole');
         Route::patch('update/role/{id}', 'updateRole')->name('updaterole');
         Route::get('delete/role/{id}', 'deleteRole')->name('deleterole');
-
+        
     });
-
+    
     //Routes For User
     Route::controller(UserController::class)->group(function(){
         // Route::get('user','registerUser')->name('registeruser');+
         Route::get('index', 'index')->name('index');
+        Route::get('user', 'registerUser')->name('registeruser');
         Route::post('user/create', 'createUser')->name('createuser');
         Route::get('edit/user/{id}', 'editUser')->name('edituser');
         Route::put('update/user/{id}', 'updateUser')->name('updateuser');

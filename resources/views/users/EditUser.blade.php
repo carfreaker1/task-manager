@@ -84,7 +84,7 @@
                       <select name="role" id="role" class="form-control"  style="width: 100%;" required>
                           <option value="">--- Select Your role ---</option>
                           @foreach ($roles as $role)
-                              <option value="{{ $role->id }}{{$role->id == $edit->role_id ? 'selected' : ''}}">{{ $role->name }}</option>
+                              <option value="{{ $role->id }}" {{$role->id == $edit->role_id ? 'selected' : ''}}>{{ $role->name }}</option>
                           @endforeach
                       </select>
                       @error('role')

@@ -1,5 +1,5 @@
 <footer class="main-footer">
-  <strong>Copyright &copy; 2014-2021 <a href="https://adminlte.io">AdminLTE.io</a>.</strong>
+  <strong>Copyright &copy; 2024-2026 <a href="https://www.instagram.com/carfreaker1/?hl=en">carfreaker1</a></strong>
   All rights reserved.
   <div class="float-right d-none d-sm-inline-block">
     <b>Version</b> 3.2.0
@@ -7,7 +7,7 @@
 </footer>
 
 <!-- Control Sidebar -->
-<aside class="control-sidebar control-sidebar-dark">
+<aside class="control-sidebar control-sidebar-dark"> 
   <!-- Control sidebar content goes here -->
   <div class="card-footer">
   @if(Auth::check())
@@ -29,6 +29,7 @@
 <script src="{{asset('assets/plugins/jquery-ui/jquery-ui.min.js')}}"></script>
 <!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
 <script>
+  setTimeout(()=>{$('.toast').fadeOut(500,function(){$(this).remove();});},4000);
   $.widget.bridge('uibutton', $.ui.button)
 </script>
 <!-- Bootstrap 4 -->
