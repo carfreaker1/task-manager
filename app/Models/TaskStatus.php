@@ -15,7 +15,8 @@ class TaskStatus extends Model
         'sub_module',
         'summary',
         'functionality',
-        'task_status'
+        'task_status',
+        'completion_precentage'
     ];
 
     public function AssignTaskName(){

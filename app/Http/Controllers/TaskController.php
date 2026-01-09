@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\TaskCompletedMail;
 use App\Models\AssignedTask;
 use App\Models\Project;
 use App\Models\Task;
@@ -10,6 +11,7 @@ use App\Models\TaskTimeline;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 use Psy\CodeCleaner\ReturnTypePass;
 
 class TaskController extends Controller
@@ -160,6 +162,7 @@ class TaskController extends Controller
             'summary' => $request->summary,
             'functionality' => $request->functionality,
             'task_status' => $request->task_status,
+            // 'completion_precentage' => $request->completion_precentage,
         ]);
         return redirect()->back()->with('successtime', 'Time Line Created Succesfully');
 
@@ -174,15 +177,31 @@ class TaskController extends Controller
             'summary' => 'required',
             'functionality' => 'required',
             'task_status' => 'required',
+            'completion_precentage' => $request->completion_precentage,
+
         ]); 
-        TaskStatus::where('id' , $request->task_status_id)->update([
+        $task = TaskStatus::where('id', $request->task_status_id)->first();
+
+        $task->update([
             'assigned_task' => $request->assigned_task,
             'start_date' => $request->start_date,
             'sub_module' => $request->sub_module,
             'summary' => $request->summary,
             'functionality' => $request->functionality,
             'task_status' => $request->task_status,
+            'completion_precentage' => $request->completion_precentage,
         ]);
+        if ($request->task_status == 3) {
+
+            $superAdmins = User::where('role_id', 1)->pluck('email');
+            $assignedTask = AssignedTask::with(['taskList.projectlists', 'userList'])
+                ->where('id', $task->assigned_task)
+                ->first();
+
+            if ($superAdmins->count() > 0 && $assignedTask) {
+                Mail::to($superAdmins)->send(new TaskCompletedMail($task, $assignedTask));
+            }
+        }
         return redirect()->back()->with('successtime', 'Time Line Created Succesfully');
 
     }

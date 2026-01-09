@@ -123,16 +123,20 @@
                                       @if($task->task_status == 1)
                                         <td class="btn-warning">Working </td>
                                       @elseif($task->task_status == 2)
-                                        <td class="btn-danger">Pending</td>
+                                        <td class="btn-danger">Pending <br> @if(isset($task->completion_precentage)) {{ $task->completion_precentage }}% Complete @endif</td>
                                       @elseif($task->task_status == 3)
                                         <td class="btn-success">Complete<br>{{date('d-m-y', strtotime($task->updated_at))}}</td>
                                       @else
                                         <td>>NA</td>
                                       @endif
                                       <td>
+                                        @if ($task->task_status == 3 && Auth::user()->role_id == 3)
+                                          Contact To Admin For Edit Task Status
+                                        @else
                                           <button type="button" class="btn btn-primary btn-sm edit_task_timeline" data-task='@json($task)' value="{{ $AssignedTask->id }}">Edit Your Task Status</button>
                                           {{-- <button type="button" class="btn btn-danger btn-sm edit_task_timeline" data-task='@json($task)' value="{{ $AssignedTask->id }}">Edit Your Task Status</button> --}}
-                                      </td>
+                                      @endif
+                                        </td>
                                       <td>
                                           <a href="{{route('deletetimeline' , encrypt($task->id))}}"><button type="button" class="btn btn-danger btn-sm " >Delete Your Task Status</button></a>
                                       </td>
@@ -228,6 +232,10 @@
                                           {{ $message }}
                                       @enderror
                                   </div>
+                                  {{-- <div class="form-group">
+                                      <label class="form-label">Completion Precentage of The Task</label>
+                                      <input id="range_5" type="text" name="completion_precentage" value="">
+                                  </div> --}}
                                   <button type="submit" class="btn btn-primary">Save changes</button>
                               </form>
                           </div>
@@ -296,6 +304,10 @@
                                           {{ $message }}
                                       @enderror
                                   </div>
+                                  <div class="form-group">
+                                    <label class="form-label">Completion Precentage of The Task</label>
+                                    <input id="range_5" type="text" name="completion_precentage" value="">
+                                </div>
                                   <button type="submit" class="btn btn-primary">Save changes</button>
                               </form>
                           </div>

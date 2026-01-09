@@ -36,6 +36,9 @@
 <script src="{{asset('assets/plugins/bootstrap/js/bootstrap.bundle.min.js')}}"></script>
 <!-- Select2 -->
 <script src="{{ asset('assets/plugins/select2/js/select2.full.min.js') }}"></script>
+<!-- Ion Slider -->
+<script src="{{ asset('assets/plugins/ion-rangeslider/js/ion.rangeSlider.min.js') }}"></script>
+<script src="{{ asset('assets/plugins/bootstrap-slider/bootstrap-slider.min.js') }}"></script>
 <!-- ChartJS -->
 <script src="{{asset('assets/plugins/chart.js/Chart.min.js')}}"></script>
 <!-- Sparkline -->
@@ -89,5 +92,22 @@
 <script src="{{ asset('js/tasktimeline.js') }}"></script>
 <script src="{{ asset('js/custom1.js') }}"></script>
 <script src="{{ asset('js/axios.min.js') }}"></script>
+<script>
+  $(function () {
+    /* BOOTSTRAP SLIDER */
+    $('.slider').bootstrapSlider()
+
+    /* ION SLIDER */
+    $('#range_5').ionRangeSlider({
+      min     : 0,
+      max     : 100,
+      type    : 'single',
+      step    : 1,
+      postfix : ' %',
+      prettify: false,
+      hasGrid : true
+    })
+  })
+</script>
 </body>
 </html>
