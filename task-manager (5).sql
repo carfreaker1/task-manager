@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 23, 2024 at 05:55 AM
--- Server version: 10.4.32-MariaDB
--- PHP Version: 8.1.25
+-- Generation Time: Jan 09, 2026 at 04:29 PM
+-- Server version: 10.4.28-MariaDB
+-- PHP Version: 8.2.4
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -148,6 +148,13 @@ CREATE TABLE `password_reset_tokens` (
   `created_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+--
+-- Dumping data for table `password_reset_tokens`
+--
+
+INSERT INTO `password_reset_tokens` (`email`, `token`, `created_at`) VALUES
+('superadmin@gmail.com', 'UpnbaEsCP3mD8qGr2G50xa5TWnAsfzmUVNzykdksbBOc5k2Q9Qw0qvkOepzjEsEt', '2024-09-02 13:10:08');
+
 -- --------------------------------------------------------
 
 --
@@ -246,6 +253,7 @@ CREATE TABLE `task_statuses` (
   `summary` varchar(255) NOT NULL,
   `functionality` varchar(255) NOT NULL,
   `task_status` varchar(255) NOT NULL,
+  `completion_precentage` varchar(255) DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -254,8 +262,9 @@ CREATE TABLE `task_statuses` (
 -- Dumping data for table `task_statuses`
 --
 
-INSERT INTO `task_statuses` (`id`, `assigned_task`, `start_date`, `sub_module`, `summary`, `functionality`, `task_status`, `created_at`, `updated_at`) VALUES
-(1, 2, '2024-05-10', 'Level Payment', 'I will working on this you have to doing here', 'Payment Document', '1', '2024-05-17 07:01:07', '2024-05-17 07:01:07');
+INSERT INTO `task_statuses` (`id`, `assigned_task`, `start_date`, `sub_module`, `summary`, `functionality`, `task_status`, `completion_precentage`, `created_at`, `updated_at`) VALUES
+(1, 2, '2024-05-10', 'Level Payment', 'I will working on this you have to doing here', 'Payment Document', '3', '0', '2024-05-17 07:01:07', '2026-01-09 09:45:13'),
+(3, 4, '1111-11-11', 'Organisation Members', 'I work on the Oganisation', 'ORganisation Member alumni', '3', NULL, '2024-05-19 08:53:37', '2026-01-09 08:19:08');
 
 -- --------------------------------------------------------
 
@@ -282,8 +291,8 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `name`, `email`, `email_verified_at`, `password`, `remember_token`, `created_at`, `updated_at`, `department_id`, `designation_id`, `role_id`) VALUES
-(1, 'Aman Sharma', 'superadmin@gmail.com', NULL, '$2y$12$kaJDhKKriDAZvgkM0Ki1NuhjIFllMbZjN.6k0kvS./lWInwTIOhV6', NULL, '2024-05-02 03:58:36', '2024-05-02 03:58:36', 1, 1, 1),
-(7, 'Neeraj Chaurasia', 'admin@gmail.com', NULL, '$2y$12$89WS4j2gaSH6VbPH2yjDgu2e5lIs602iYuP.lMaSD6h8lux0ARyeq', NULL, '2024-05-02 04:14:06', '2024-05-02 04:14:06', 1, 1, 3);
+(1, 'Aman Sharma', '2400330140004@rkgit.edu.in\n', NULL, '$2y$12$kaJDhKKriDAZvgkM0Ki1NuhjIFllMbZjN.6k0kvS./lWInwTIOhV6', NULL, '2024-05-02 03:58:36', '2024-05-02 03:58:36', 1, 1, 1),
+(7, 'Neeraj Chaurasia', 'admin@gmail.com', NULL, '$2y$12$89WS4j2gaSH6VbPH2yjDgu2e5lIs602iYuP.lMaSD6h8lux0ARyeq', NULL, '2024-05-02 04:14:06', '2025-11-23 13:58:12', 1, 3, 3);
 
 --
 -- Indexes for dumped tables
@@ -427,7 +436,7 @@ ALTER TABLE `tasks`
 -- AUTO_INCREMENT for table `task_statuses`
 --
 ALTER TABLE `task_statuses`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `users`
