@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ChatController;
 use App\Http\Controllers\EmployeeFieldController;
 use App\Http\Controllers\ExcelPreviewController;
 use App\Http\Controllers\ForgetPasswordController;
@@ -10,6 +11,7 @@ use App\Http\Controllers\TaskController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use Illuminate\Auth\Middleware\Authenticate;
+use Illuminate\Support\Facades\Broadcast;
 use PhpParser\Node\Expr\FuncCall;
 
 /*
@@ -41,7 +43,7 @@ Route::group(['middleware'=>'guest'],function(){
 });
 
 
-
+Broadcast::routes(['middleware' => ['auth']]);
 Route::group(['middleware'=>'auth'],function(){
     
     /** * Logout Route */
@@ -128,5 +130,8 @@ Route::group(['middleware'=>'auth'],function(){
         Route::post('export', 'export')->name('export');
         Route::get('/excel/import', 'importForm')->name('excelImport');
     });
+    Route::get('/chat', [ChatController::class, 'index'])->name('chat.index')->name('chat.index');
+    Route::get('/chat/{id}/messages', [ChatController::class, 'fetchMessages']);
+    Route::post('/send-message', [ChatController::class, 'sendMessage'])->name('chat.send');
 // 
 });

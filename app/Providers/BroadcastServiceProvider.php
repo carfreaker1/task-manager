@@ -12,7 +12,9 @@ class BroadcastServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        Broadcast::routes();
+        Broadcast::channel('taskmanager.{id}', function ($user, $id) {
+            return (int) $user->id === (int) $id; // only the owner can listen
+        });
 
         require base_path('routes/channels.php');
     }

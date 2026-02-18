@@ -16,3 +16,7 @@ use Illuminate\Support\Facades\Broadcast;
 Broadcast::channel('App.Models.User.{id}', function ($user, $id) {
     return (int) $user->id === (int) $id;
 });
+Broadcast::channel('taskmanager.{id}', function ($user, $id) {
+    // Allow only the receiver of this chat channel
+    return (int) $user->id === (int) $id;
+}); 
