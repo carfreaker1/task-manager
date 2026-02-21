@@ -70,6 +70,8 @@ Route::group(['middleware'=>'auth'],function(){
         Route::put('update/user/{id}', 'updateUser')->name('updateuser');
         Route::put('delete/user/{id}', 'deleteUser')->name('deleteuser');
         Route::get('user/list', 'usersList')->name('userslist');
+        Route::post('/user/status', 'updateStatus');
+        Route::get('/users/status', 'getStatuses');
     });
 
     // Route For Department & Designation

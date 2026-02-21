@@ -121,4 +121,17 @@ class UserController extends Controller
         // dd(Auth::id(f));
         return view('users.UserList', compact('users'));
     }
+    public function updateStatus(Request $request)
+    {   
+        Auth::user()->update([
+            'status' => $request->status
+        ]);
+
+        return response()->json(['success' => true]);
+    }
+
+    public function getStatuses()
+    {
+        return User::select('id', 'status')->get();
+    }
 }

@@ -1,6 +1,192 @@
 @extends('layouts.masterlayout')
 
 @section('content')
+<style>
+    /* ===== General Layout ===== */
+body {
+    background: #f4f6f9;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+.chat-container {
+    padding: 20px;
+}
+.chat-messages {
+    scroll-behavior: smooth;
+}
+.chat-card {
+    display: flex;
+    height: 80vh;
+    background: #ffffff;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+}
+
+/* ===== Users Panel ===== */
+.users-panel {
+    width: 30%;
+    border-right: 1px solid #eee;
+    display: flex;
+    flex-direction: column;
+    background: #fafafa;
+}
+
+.panel-header {
+    padding: 15px;
+    background: #4e73df;
+    color: white;
+    font-weight: 600;
+}
+
+.user-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    overflow-y: auto;
+}
+
+.user-list li a {
+    display: flex;
+    align-items: center;
+    padding: 12px 15px;
+    text-decoration: none;
+    color: #333;
+    transition: 0.3s;
+}
+
+.user-list li a:hover {
+    background: #e9ecef;
+}
+
+.user-avatar {
+    width: 35px;
+    height: 35px;
+    background: #4e73df;
+    color: white;
+    font-weight: bold;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 10px;
+}
+
+.user-name {
+    font-weight: 500;
+}
+
+/* ===== Chat Panel ===== */
+.chat-panel {
+    width: 70%;
+    display: flex;
+    flex-direction: column;
+}
+
+.chat-header {
+    background: #ffffff;
+    color: #333;
+    border-bottom: 1px solid #eee;
+}
+
+.chat-messages {
+    flex: 1;
+    padding: 15px;
+    overflow-y: auto;
+    background: #f8f9fc;
+
+    display: flex;
+    flex-direction: column;
+}
+
+/* Chat bubbles */
+.message {
+    max-width: 60%;
+    padding: 10px 15px;
+    border-radius: 18px;
+    margin-bottom: 10px;
+    font-size: 14px;
+    word-wrap: break-word;
+    display: inline-block;
+}
+
+.message.sent {
+    background: #4e73df;
+    color: white;
+    align-self: flex-end;
+    border-bottom-right-radius: 5px;
+}
+
+.message.received {
+    background: #e4e6eb;
+    color: #333;
+    align-self: flex-start;
+    border-bottom-left-radius: 5px;
+}
+
+/* ===== Chat Form ===== */
+.chat-form {
+    padding: 10px;
+    border-top: 1px solid #eee;
+    background: white;
+}
+
+.input-group {
+    display: flex;
+}
+
+.input-group input {
+    flex: 1;
+    padding: 10px;
+    border-radius: 20px 0 0 20px;
+    border: 1px solid #ddd;
+    outline: none;
+}
+
+.input-group button {
+    padding: 10px 20px;
+    border: none;
+    background: #4e73df;
+    color: white;
+    border-radius: 0 20px 20px 0;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.input-group button:hover {
+    background: #2e59d9;
+}
+
+/* ===== Responsive Design ===== */
+@media (max-width: 768px) {
+
+    .chat-card {
+        flex-direction: column;
+        height: 95vh;
+    }
+
+    .users-panel {
+        width: 100%;
+        height: 35%;
+    }
+
+    .chat-panel {
+    width: 70%;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+    .user-list li a {
+        padding: 10px;
+    }
+
+    .message {
+        max-width: 85%;
+        font-size: 13px;
+    }
+}
+</style>
   <!-- Content Wrapper. Contains page content -->
   <div class="content-wrapper">
     <!-- Content Header (Page header) -->
@@ -95,28 +281,47 @@
                       });    
                     </script>
                 @endif
-                <div class="row">
-                    <!-- Users List -->
-                    <div class="col-md-4">
-                        <h4>Users</h4>
-                        <ul id="user-list">
-                            @foreach($users as $user)
-                                <li><a href="#" onclick="openChat({{ $user->id }}, '{{ $user->name }}')">{{ $user->name }}</a></li>
-                            @endforeach
-                        </ul>
-                    </div>
-            
-                    <!-- Chat Box -->
-                    <div class="col-md-8">
-                        <h4 id="chat-with">Select a user to chat</h4>
-                        <div id="messages" style="height:300px; overflow-y:scroll; border:1px solid #ccc; padding:10px;"></div>
-            
-                        <form id="chat-form" style="display:none; margin-top:10px;">
-                            @csrf
-                            <input type="hidden" id="to_id">
-                            <input type="text" id="message" placeholder="Type message" class="form-control">
-                            <button type="submit" class="btn btn-primary mt-2">Send</button>
-                        </form>
+                <div class="chat-container">
+                    <div class="chat-card">
+                
+                        <!-- Users List -->
+                        <div class="users-panel">
+                            <div class="panel-header">
+                                <h4>Users</h4>
+                            </div>
+                            <ul id="user-list" class="user-list">
+                                @foreach($users as $user)
+                                    <li>
+                                        <a href="#" onclick="openChat({{ $user->id }}, '{{ $user->name }}')">
+                                            <div class="user-avatar">
+                                                {{ strtoupper(substr($user->name,0,1)) }}
+                                            </div>
+                                            <span class="user-name">{{ $user->name }}</span><span class="badge badge-secondary user-status chat-status" id="status-{{ $user->id }}">Offline</span>
+                                        </a>
+                                    </li>
+                                @endforeach
+                            </ul>
+                        </div>
+                
+                        <!-- Chat Box -->
+                        <div class="chat-panel">
+                            <div class="panel-header chat-header">
+                                <h4 id="chat-with">Select a user to chat</h4>
+                            </div>
+                
+                            <div id="messages" class="chat-messages"></div>
+                
+                            <form id="chat-form" class="chat-form">
+                                @csrf
+                                <input type="hidden" id="to_id">
+                
+                                <div class="input-group">
+                                    <input type="text" id="message" placeholder="Type a message..." autocomplete="off">
+                                    <button type="submit">Send</button>
+                                </div>
+                            </form>
+                        </div>
+                
                     </div>
                 </div>
                 <!-- /.card-body -->
@@ -133,7 +338,11 @@
 
       <script src="https://js.pusher.com/8.2/pusher.min.js"></script>
       <script>
-          Pusher.logToConsole = true;
+        function scrollToBottom() {
+            let messages = document.getElementById("messages");
+            messages.scrollTop = messages.scrollHeight;
+        }
+          Pusher.logToConsole = false;
       
           var pusher = new Pusher("{{ config('broadcasting.connections.pusher.key') }}", {
               cluster: "{{ config('broadcasting.connections.pusher.options.cluster') }}",
@@ -150,7 +359,8 @@
           // FIX 2: use correct event name
           channel.bind('MessageSent', function(data) {
               if (data.message.from_id === currentChatId) {
-                  appendMessage(data.message.sender.name, data.message.message);
+                //   appendMessage(data.message.sender.name, data.message.message);
+                appendMessage(data.message.sender.name, data.message.message);
               }
           });
       
@@ -166,15 +376,35 @@
                       let msgBox = document.getElementById('messages');
                       msgBox.innerHTML = "";
                       messages.forEach(m => {
-                          appendMessage(m.sender.name, m.message);
+                        //   appendMessage(m.sender.name, m.message);
+                        appendMessage(
+                            m.from_id,
+                            m.sender.name,
+                            m.message
+                        );
                       });
+                      scrollToBottom();
+                      fetchUserStatuses();
                   });
           }
       
-          function appendMessage(user, message) {
-              let msg = `<p><strong>${user}:</strong> ${message}</p>`;
-              document.getElementById('messages').innerHTML += msg;
-          }
+        //   function appendMessage(user, message) {
+        //       let msg = `<p><strong>${user}:</strong> ${message}</p>`;
+        //       document.getElementById('messages').innerHTML += msg;
+        //   }
+          function appendMessage(fromId, user, message) {
+
+                let messageClass = (fromId == currentUserId) ? 'sent' : 'received';
+
+                let msg = `
+                    <span class="message ${messageClass}">
+                        ${message}
+                    </span>
+                `;
+
+                document.getElementById('messages').innerHTML += msg;
+                scrollToBottom();
+            }
       
           document.getElementById('chat-form').addEventListener('submit', function(e) {
               e.preventDefault();
@@ -189,10 +419,78 @@
                   },
                   body: JSON.stringify({ to_id: toId, message: message })
               }).then(res => res.json()).then(data => {
-                  appendMessage(data.sender.name, data.message);
+                //   appendMessage(data.sender.name, data.message);
+                appendMessage(
+                    data.from_id,
+                    data.sender.name,
+                    data.message
+                );
                   document.getElementById('message').value = '';
               });
           });
+
+
+
+        //   online offline events
+        let isOnline = navigator.onLine;
+let onlineTimer = null;
+
+function updateOnlineStatus(status) {
+    fetch('/user/status', {
+        method: 'POST',
+        headers: {
+            'X-CSRF-TOKEN': document.querySelector('[name=_token]').value,
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ status: status })
+    });
+}
+
+// When user comes online → wait 5 sec → set status = 1
+window.addEventListener('online', () => {
+    console.log('online')
+    clearTimeout(onlineTimer);
+    onlineTimer = setTimeout(() => {
+        updateOnlineStatus(1);
+    }, 5000);
+});
+
+// When user goes offline / closes tab → status = 0
+window.addEventListener('offline', () => updateOnlineStatus(0));
+window.addEventListener('beforeunload', () => updateOnlineStatus(0));
+
+// Initial load
+if (isOnline) {
+    setTimeout(() => updateOnlineStatus(1), 5000);
+}
+
+function fetchUserStatuses() {
+    fetch('/users/status')
+        .then(res => res.json())
+        .then(users => {
+            users.forEach(user => {
+                let badge = document.getElementById('status-' + user.id);
+                if (!badge) return;
+
+                if (user.status == 1) {
+                    badge.innerText = 'Online';
+                    badge.className = 'badge badge-success user-status';
+                } else {
+                    badge.innerText = 'Offline';
+                    badge.className = 'badge badge-secondary user-status';
+                }
+
+                // If current chat user
+                if (currentChatId == user.id) {
+                    document.getElementById('chat-status').innerText =
+                        user.status == 1 ? 'Online' : 'Offline';
+                }
+            });
+        });
+}
+
+// fetch every 1 minute
+setInterval(fetchUserStatuses, 60000);
+fetchUserStatuses();
       </script>
-      
 @endsection
