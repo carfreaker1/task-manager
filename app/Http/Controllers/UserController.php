@@ -123,11 +123,18 @@ class UserController extends Controller
     }
     public function updateStatus(Request $request)
     {   
-        Auth::user()->update([
-            'status' => $request->status
-        ]);
+        try {
+            // User::where('id',auth()->user())->update([
+            //     'status' => $request->status
+            // ]);
+            $user = auth()->user();
+            $user->status = $request->status;
+            $user->save();
 
-        return response()->json(['success' => true]);
+            return response()->json(['success' => true]);
+        } catch (\Exception $e) {
+            return response()->json(['success' => false, 'error' => $e->getMessage()]);
+        }
     }
 
     public function getStatuses()

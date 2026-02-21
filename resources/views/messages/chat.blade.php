@@ -296,7 +296,7 @@ body {
                                             <div class="user-avatar">
                                                 {{ strtoupper(substr($user->name,0,1)) }}
                                             </div>
-                                            <span class="user-name">{{ $user->name }}</span><span class="badge badge-secondary user-status chat-status" id="status-{{ $user->id }}">Offline</span>
+                                            <span class="user-name">{{ $user->name }}</span><span class="badge badge-secondary user-status" id="status-{{ $user->id }}">Offline</span>
                                         </a>
                                     </li>
                                 @endforeach
@@ -430,11 +430,23 @@ body {
           });
 
 
+          async function isReallyOnline() {
+    if (!navigator.onLine) return false;
 
-        //   online offline events
-        let isOnline = navigator.onLine;
+    try {
+        await fetch('https://www.google.com/generate_204', {
+            cache: 'no-store',
+            mode: 'no-cors'
+        });
+        return true;
+    } catch {
+        return false;
+    }
+}
+
 let onlineTimer = null;
 
+// Update status function
 function updateOnlineStatus(status) {
     fetch('/user/status', {
         method: 'POST',
@@ -442,28 +454,29 @@ function updateOnlineStatus(status) {
             'X-CSRF-TOKEN': document.querySelector('[name=_token]').value,
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ status: status })
+        body: JSON.stringify({ status })
     });
 }
 
 // When user comes online → wait 5 sec → set status = 1
 window.addEventListener('online', () => {
-    console.log('online')
     clearTimeout(onlineTimer);
-    onlineTimer = setTimeout(() => {
-        updateOnlineStatus(1);
-    }, 5000);
+    onlineTimer = setTimeout(() => updateOnlineStatus(1), 5000);
 });
 
 // When user goes offline / closes tab → status = 0
 window.addEventListener('offline', () => updateOnlineStatus(0));
 window.addEventListener('beforeunload', () => updateOnlineStatus(0));
 
-// Initial load
-if (isOnline) {
-    setTimeout(() => updateOnlineStatus(1), 5000);
-}
+// Initial load check
+(async function() {
+    const isOnline = await isReallyOnline();
+    console.log('Initial online status:', isOnline);
 
+    if (isOnline) {
+        setTimeout(() => updateOnlineStatus(1), 1000);
+    }
+})();
 function fetchUserStatuses() {
     fetch('/users/status')
         .then(res => res.json())
