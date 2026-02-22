@@ -85,6 +85,7 @@
                       <th>Note</th>
                       @if(isset($TaskStatus) && count($TaskStatus) > 0)
                         <th>Start Date</th>
+                        <th>Dead Line Date</th>
                         <th>Sub Module</th>
                         <th>Summary</th>
                         <th>Functionality</th>
@@ -116,7 +117,8 @@
                           @if(isset($TaskStatus) && count($TaskStatus) > 0)
                               @foreach ($TaskStatus as $task)
                                   @if($AssignedTask->id == $task->assigned_task)
-                                      <td>{{ date('d-m-y', strtotime($task->start_date)) }}</td>
+                                      <td>{{ date('d-m-y', strtotime($task->start_date)) ?? 'NA' }}</td>
+                                      <td>{{ date('d-m-y', strtotime($task->end_date)) ?? 'NA'}}</td>
                                       <td>{{ $task->sub_module ?? '' }}</td>
                                       <td>{{ $task->summary ?? '' }}</td>
                                       <td>{{ $task->functionality ?? '' }}</td>
@@ -196,6 +198,15 @@
                                           <input type="date" name="start_date" class="form-control">
                                       </div>
                                       @error('start_date')
+                                          {{ $message }}
+                                      @enderror
+                                  </div>
+                                  <div class="form-group">
+                                      <label>Dead Line Date:</label>
+                                      <div class="input-group date" id="reservationdate" data-target-input="nearest">
+                                          <input type="date" name="end_date" class="form-control">
+                                      </div>
+                                      @error('end_date')
                                           {{ $message }}
                                       @enderror
                                   </div>

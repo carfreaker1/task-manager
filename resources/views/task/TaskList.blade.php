@@ -54,6 +54,28 @@
                       $(".toast").addClass('bg-danger')
                       });    
                     </script>
+                  @elseif(session('succes'))
+                   {{-- <p class="alert alert-success text-center alert-dismissible">{{ session('delete') }}</p> --}}
+                    <script>
+                      $(document).ready(function() {
+                        $(document).Toasts('create', {
+                          title: 'Project',
+                          body: 'Project Deleted Succesfully'
+                      })
+                      $(".toast").addClass('bg-success')
+                      });    
+                    </script>
+                  @elseif(session('errorDuplicate'))
+                   {{-- <p class="alert alert-success text-center alert-dismissible">{{ session('delete') }}</p> --}}
+                    <script>
+                      $(document).ready(function() {
+                        $(document).Toasts('create', {
+                          title: 'Project',
+                          body: '{{ (session('errorDuplicate')) }}'
+                      })
+                      $(".toast").addClass('bg-warning')
+                      });    
+                    </script>
                   @endif
                 <!-- /.card-header -->
                 <div class="card-body">

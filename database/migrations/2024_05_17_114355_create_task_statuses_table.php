@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('assigned_task', 45);
             $table->date('start_date');
+            $table->date('end_date');
             $table->string('sub_module', 255);
             $table->string('summary', 255);
             $table->string('functionality', 255);

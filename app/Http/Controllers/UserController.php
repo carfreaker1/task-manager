@@ -8,7 +8,10 @@ use App\Models\UserRegister;
 use Illuminate\Http\Request;
 use App\Models\EmployeeDepartment;
 use App\Models\EmployeeDesignation;
+use App\Models\Project;
 use App\Models\Role;
+use App\Models\Task;
+use App\Models\TaskStatus;
 use Illuminate\Auth\Events\Validated;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -16,22 +19,13 @@ use Illuminate\Support\Facades\DB;
 class UserController extends Controller
 {
     public function index()
-    { 
-        // $tender_management = DB::table('tender_management')
-        //                         ->select('tender_management.start_date as startDate'
-        //                         ,'tender_management.title_name_en as title_name_en'
-        //                         ,'tender_management.title_name_hi as title_name_hi','tender_management.tender_typeid',
-        //                         'tender_management.tender_cost',
-        //                         'tender_details.*')
-        //                         ->where('tender_management.soft_delete', 0)
-        //                         ->where('tender_management.status', 3)
-        //                         ->leftjoin('tender_details', 'tender_management.uid', '=', 'tender_details.tender_id')
-        //                         ->where('tender_details.soft_delete', 0)
-        //                         ->whereDate('tender_details.archivel_date', '>=', now()->toDateString())
-        //                         ->latest('tender_management.created_at')
-        //                         ->latest('tender_details.created_at')
-        //                         ->get();
-        //                         dd($tender_management);
+    {   
+        $totalProject = Project::count();
+        $totalProject = Task::count();
+        $totalProject = TaskStatus::where('task_status', 3)->count();
+        $totalProject = TaskStatus::where('task_status', '!=', 3)->count();
+        $overDueProject = TaskStatus::where('end_date', '>', now())->count();
+        dd($overDueProject);
         return view('index');
     }
 
