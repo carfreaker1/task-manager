@@ -18,16 +18,6 @@ use Illuminate\Support\Facades\DB;
 
 class UserController extends Controller
 {
-    public function index()
-    {   
-        $totalProject = Project::count();
-        $totalProject = Task::count();
-        $totalProject = TaskStatus::where('task_status', 3)->count();
-        $totalProject = TaskStatus::where('task_status', '!=', 3)->count();
-        $overDueProject = TaskStatus::where('end_date', '>', now())->count();
-        dd($overDueProject);
-        return view('index');
-    }
 
     public function registerUser(){
         $departments = EmployeeDepartment::get();

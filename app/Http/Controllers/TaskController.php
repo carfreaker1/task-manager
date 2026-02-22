@@ -132,6 +132,13 @@ class TaskController extends Controller
         ]);
         $tasks  = $request->assigned_task;
         // dd($tasks);  
+        $duplicate = AssignedTask::whereIn('assigned_task', $tasks)
+        ->whereIn('assigned_user', $request->assigned_user)
+        ->exists();
+    
+        if ($duplicate) {
+            return back()->with('errorDuplicate', 'Task already assigned to this user.');
+        }
         foreach($tasks as $task_ids){
             foreach($request->assigned_user as $user_ids){
                 AssignedTask::where('id' , $id)->update([
@@ -181,11 +188,12 @@ class TaskController extends Controller
         $request->validate([
             'assigned_task' => 'required',
             'start_date' => 'required',
+            'end_date' => 'required',
             'sub_module' => 'required',
             'summary' => 'required',
             'functionality' => 'required',
             'task_status' => 'required',
-            'completion_precentage' => $request->completion_precentage,
+            'completion_precentage' => 'required|numeric|min:0|max:100',
 
         ]); 
         $task = TaskStatus::where('id', $request->task_status_id)->first();
@@ -193,6 +201,7 @@ class TaskController extends Controller
         $task->update([
             'assigned_task' => $request->assigned_task,
             'start_date' => $request->start_date,
+            'end_date' => $request->end_date,
             'sub_module' => $request->sub_module,
             'summary' => $request->summary,
             'functionality' => $request->functionality,

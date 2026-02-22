@@ -6,7 +6,70 @@
  **/
 
 /* global moment:false, Chart:false, Sparkline:false */
+$(function () {
+  'use strict'
+  //-------------
+ //- BAR CHART -
+ //-------------
+ var areaChartData = {
+  labels  : ['January', 'February', 'March', 'April'],
+  datasets: [
+    {
+      label               : 'Team A',
+      backgroundColor     : 'rgba(60,141,188,0.9)',
+      data                : [10, 20, 30, 40]
+    },
+    {
+      label               : 'Team B',
+      backgroundColor     : 'rgba(210, 214, 222, 1)',
+      data                : [15, 25, 35, 45]
+    }
+  ]
+}
+ var barChartCanvas = $('#barChart').get(0).getContext('2d')
+ var barChartData = $.extend(true, {}, areaChartData)
+ var temp0 = areaChartData.datasets[0]
+ var temp1 = areaChartData.datasets[1]
+ barChartData.datasets[0] = temp1
+ barChartData.datasets[1] = temp0
 
+ var barChartOptions = {
+   responsive              : true,
+   maintainAspectRatio     : false,
+   datasetFill             : false
+ }
+
+ new Chart(barChartCanvas, {
+   type: 'bar',
+   data: barChartData,
+   options: barChartOptions
+ })
+
+ //---------------------
+ //- STACKED BAR CHART -
+ //---------------------
+ var stackedBarChartCanvas = $('#stackedBarChart').get(0).getContext('2d')
+ var stackedBarChartData = $.extend(true, {}, barChartData)
+
+ var stackedBarChartOptions = {
+   responsive              : true,
+   maintainAspectRatio     : false,
+   scales: {
+     xAxes: [{
+       stacked: true,
+     }],
+     yAxes: [{
+       stacked: true
+     }]
+   }
+ }
+
+ new Chart(stackedBarChartCanvas, {
+   type: 'bar',
+   data: stackedBarChartData,
+   options: stackedBarChartOptions
+ })
+})
 $(function () {
   'use strict'
 
@@ -172,36 +235,61 @@ $(function () {
     options: salesChartOptions
   })
 
-  // Donut Chart
-  var pieChartCanvas = $('#sales-chart-canvas').get(0).getContext('2d')
-  var pieData = {
-    labels: [
-      'Instore Sales',
-      'Download Sales',
-      'Mail-Order Sales'
-    ],
-    datasets: [
-      {
-        data: [30, 12, 20],
-        backgroundColor: ['#f56954', '#00a65a', '#f39c12']
-      }
-    ]
-  }
-  var pieOptions = {
-    legend: {
-      display: false
-    },
-    maintainAspectRatio: false,
-    responsive: true
-  }
-  // Create pie or douhnut chart
-  // You can switch between pie and douhnut using the method below.
-  // eslint-disable-next-line no-unused-vars
-  var pieChart = new Chart(pieChartCanvas, { // lgtm[js/unused-local-variable]
-    type: 'doughnut',
-    data: pieData,
-    options: pieOptions
-  })
+  $(function () {
+
+    var pieChartCanvas = $('#sales-chart-canvas').get(0).getContext('2d');
+  
+    var pieOptions = {
+      legend: {
+        display: true
+      },
+      maintainAspectRatio: false,
+      responsive: true
+    };
+  
+    // Create empty chart first
+    var pieChart = new Chart(pieChartCanvas, {
+      type: 'doughnut',
+      data: {
+        labels: ['Pending', 'In Progress', 'Completed', 'Overdue'],
+        datasets: [{
+          data: [0, 0, 0, 0], // empty initially
+          backgroundColor: ['#f39c12', '#00c0ef', '#00a65a', '#f56954']
+        }]
+      },
+      options: pieOptions
+    });
+  
+    // AJAX function
+    function loadTaskStatus() {
+      $.ajax({
+        url: '/dashboard/task-status', // your route
+        type: 'GET',
+        success: function (response) {
+  
+          // Update chart data
+          pieChart.data.datasets[0].data = [
+            response.pendingTask,
+            response.inProgressTask,
+            response.completedTask,
+            response.overDueTask
+          ];
+  
+          pieChart.update(); // refresh chart
+        },
+        error: function () {
+          console.log('Failed to load task status data.');
+        }
+      });
+    }
+  
+    // Load on page start
+    loadTaskStatus();
+  
+    // OPTIONAL: Auto refresh every 30 seconds
+    setInterval(loadTaskStatus, 30000);
+  
+  });
 
   // Sales graph chart
   var salesGraphChartCanvas = $('#line-chart').get(0).getContext('2d')
@@ -264,4 +352,6 @@ $(function () {
     data: salesGraphChartData,
     options: salesGraphChartOptions
   })
+  
 })
+

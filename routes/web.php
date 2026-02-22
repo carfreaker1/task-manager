@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ChatController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\EmployeeFieldController;
 use App\Http\Controllers\ExcelPreviewController;
 use App\Http\Controllers\ForgetPasswordController;
@@ -135,5 +136,11 @@ Route::group(['middleware'=>'auth'],function(){
     Route::get('/chat', [ChatController::class, 'index'])->name('chat.index')->name('chat.index');
     Route::get('/chat/{id}/messages', [ChatController::class, 'fetchMessages']);
     Route::post('/send-message', [ChatController::class, 'sendMessage'])->name('chat.send');
+
+    // Dashboard Controller
+    Route::controller(DashboardController::class)->group(function(){
+        Route::get('/dashboard/task-status', 'taskStatus')->name('dashboard.task.status');
+        Route::get('index', 'index')->name('index');
+    });
 // 
 });

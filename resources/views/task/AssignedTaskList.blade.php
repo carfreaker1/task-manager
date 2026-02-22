@@ -283,6 +283,15 @@
                                       @enderror
                                   </div>
                                   <div class="form-group">
+                                      <label>Date:</label>
+                                      <div class="input-group date" id="reservationdate" data-target-input="nearest">
+                                          <input type="date" name="end_date" class="form-control">
+                                      </div>
+                                      @error('end_date')
+                                          {{ $message }}
+                                      @enderror
+                                  </div>
+                                  <div class="form-group">
                                       <label for="sub_module" class="form-label">Sub Module Name</label>
                                       <input type="text" value="{{ old('sub_module') }}" class="form-control" id="sub_module_edit" name="sub_module" aria-describedby="emailHelp" pattern="[A-Z a-z\s]{3,30}" placeholder="Enter Your Sub Module Name" required>
                                       @error('sub_module')

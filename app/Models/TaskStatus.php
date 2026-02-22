@@ -12,6 +12,7 @@ class TaskStatus extends Model
     protected $fillable = [
         'assigned_task',
         'start_date',
+        'end_date',
         'sub_module',
         'summary',
         'functionality',

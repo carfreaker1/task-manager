@@ -30,7 +30,7 @@
             <!-- small box -->
             <div class="small-box bg-info">
               <div class="inner">
-                <h3>150</h3>
+                <h3>{{ $data['totalProject'] }}</h3>
 
                 <p>Total Projects </p>
               </div>
@@ -45,7 +45,7 @@
             <!-- small box -->
             <div class="small-box bg-warning">
               <div class="inner">
-                <h3>53<sup style="font-size: 20px">%</sup></h3>
+                <h3>{{ $data['totalTask'] }}</h3>
 
                 <p>Total Tasks</p>
               </div>
@@ -60,7 +60,7 @@
             <!-- small box -->
             <div class="small-box bg-success">
               <div class="inner">
-                <h3>44</h3>
+                <h3>{{ $data['completedTask'] }}</h3>
 
                 <p>Completed Tasks</p>
               </div>
@@ -75,7 +75,7 @@
             <!-- small box -->
             <div class="small-box bg-danger">
               <div class="inner">
-                <h3>65</h3>
+                <h3>{{ $data['pendingTask'] }}</h3>
 
                 <p>Pending Tasks</p>
               </div>
@@ -89,7 +89,7 @@
             <!-- small box -->
             <div class="small-box bg-danger">
               <div class="inner">
-                <h3>65</h3>
+                <h3>{{ $data['overDueTask'] }}</h3>
 
                 <p>Overdue Tasks</p>
               </div>
@@ -103,7 +103,7 @@
             <!-- small box -->
             <div class="small-box bg-secondary">
               <div class="inner">
-                <h3>65</h3>
+                <h3>{{ $data['activeUsers'] }}</h3>
 
                 <p>Active Users</p>
               </div>
@@ -152,7 +152,27 @@
               </div><!-- /.card-body -->
             </div>
             <!-- /.card -->
+            {{-- BAR CHART --}}
+            <div class="card card-success">
+              <div class="card-header">
+                <h3 class="card-title">Bar Chart</h3>
 
+                <div class="card-tools">
+                  <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                    <i class="fas fa-minus"></i>
+                  </button>
+                  <button type="button" class="btn btn-tool" data-card-widget="remove">
+                    <i class="fas fa-times"></i>
+                  </button>
+                </div>
+              </div>
+              <div class="card-body">
+                <div class="chart"><div class="chartjs-size-monitor"><div class="chartjs-size-monitor-expand"><div class=""></div></div><div class="chartjs-size-monitor-shrink"><div class=""></div></div></div>
+                  <canvas id="barChart" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%; display: block; width: 488px;" width="488" height="250" class="chartjs-render-monitor"></canvas>
+                </div>
+              </div>
+              <!-- /.card-body -->
+            </div>
             <!-- DIRECT CHAT -->
             <div class="card direct-chat direct-chat-primary">
               <div class="card-header">
@@ -171,6 +191,7 @@
                   </button>
                 </div>
               </div>
+            <!-- /.card -->
               <!-- /.card-header -->
               <div class="card-body">
                 <!-- Conversations are loaded here -->
