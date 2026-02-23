@@ -11,39 +11,65 @@ $(function () {
   //-------------
  //- BAR CHART -
  //-------------
- var areaChartData = {
-  labels  : ['January', 'February', 'March', 'April'],
-  datasets: [
-    {
-      label               : 'Team A',
-      backgroundColor     : 'rgba(60,141,188,0.9)',
-      data                : [10, 20, 30, 40]
-    },
-    {
-      label               : 'Team B',
-      backgroundColor     : 'rgba(210, 214, 222, 1)',
-      data                : [15, 25, 35, 45]
-    }
-  ]
-}
- var barChartCanvas = $('#barChart').get(0).getContext('2d')
- var barChartData = $.extend(true, {}, areaChartData)
- var temp0 = areaChartData.datasets[0]
- var temp1 = areaChartData.datasets[1]
- barChartData.datasets[0] = temp1
- barChartData.datasets[1] = temp0
+ function loadTaskProgres(){
 
- var barChartOptions = {
-   responsive              : true,
-   maintainAspectRatio     : false,
-   datasetFill             : false
- }
+    $.ajax({
+        url: '/dashboard/project-progress',
+        type: "GET",
+        success: function(response){
 
- new Chart(barChartCanvas, {
-   type: 'bar',
-   data: barChartData,
-   options: barChartOptions
- })
+            let labels = [];
+            let percentages = [];
+
+            response.forEach(function(item){
+                labels.push(item.project);
+                percentages.push(item.percentage);
+            });
+
+            var areaChartData = {
+                labels  : labels,
+                datasets: [
+                    {
+                        label               : 'Project Completion %',
+                        backgroundColor     : 'rgba(60,141,188,0.9)',
+                        data                : percentages
+                    }
+                ]
+            }
+
+            var barChartCanvas = $('#barChart').get(0).getContext('2d')
+            var barChartData = $.extend(true, {}, areaChartData)
+
+            var barChartOptions = {
+              responsive: true,
+              maintainAspectRatio: false,
+              scales: {
+                yAxes: [{
+                  ticks: {
+                    beginAtZero: true,  // 🔥 important
+                    min: 0,             // force start from 0
+                    max: 100,           // optional but recommended
+                    stepSize: 10
+                  }
+                }]
+              }
+            };
+
+            new Chart(barChartCanvas, {
+                type: 'bar',
+                data: barChartData,
+                options: barChartOptions
+            });
+
+        }
+    });
+
+};
+    // Load on page start
+    loadTaskProgres();
+  
+    // OPTIONAL: Auto refresh every 30 seconds
+    setInterval(loadTaskProgres, 30000);
 
  //---------------------
  //- STACKED BAR CHART -

@@ -18,4 +18,9 @@ class Task extends Model
     public function projectlists(){
         return $this->belongsTo(Project::class,'project_id');
     }
+
+    public function assignedTasks()
+    {
+        return $this->hasMany(AssignedTask::class, 'assigned_task');
+    }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\AssignedTask;
 use App\Models\Project;
 use App\Models\Task;
 use App\Models\TaskStatus;
@@ -35,19 +36,55 @@ class DashboardController extends Controller
     }
 
     public function taskStatus()
-{
-    $pendingTask = TaskStatus::where('task_status', 2)->count();
-    $inProgressTask = TaskStatus::whereIn('task_status', [1, 2])->count();
-    $completedTask = TaskStatus::where('task_status', 3)->count();
-    $overDueTask = TaskStatus::where('end_date', '<', now())
-                    ->where('task_status', '!=', 3)
-                    ->count();
+    {
+        $pendingTask = TaskStatus::where('task_status', 2)->count();
+        $inProgressTask = TaskStatus::whereIn('task_status', [1, 2])->count();
+        $completedTask = TaskStatus::where('task_status', 3)->count();
+        $overDueTask = TaskStatus::where('end_date', '<', now())
+                        ->where('task_status', '!=', 3)
+                        ->count();
 
-    return response()->json([
-        'pendingTask' => $pendingTask,
-        'inProgressTask' => $inProgressTask,
-        'completedTask' => $completedTask,
-        'overDueTask' => $overDueTask,
-    ]);
+        return response()->json([
+            'pendingTask' => $pendingTask,
+            'inProgressTask' => $inProgressTask,
+            'completedTask' => $completedTask,
+            'overDueTask' => $overDueTask,
+        ]);
+    }
+
+    public function projectProgres()
+{
+    $projects = Project::with(['tasks.assignedTasks.taskStatuses'])->get();
+
+    $result = [];
+
+    foreach ($projects as $project) {
+
+        $totalPercentage = 0;
+        $totalCount = 0;
+
+        foreach ($project->tasks as $task) {
+
+            foreach ($task->assignedTasks as $assignedTask) {
+
+                foreach ($assignedTask->taskStatuses as $status) {
+
+                    $totalPercentage += $status->completion_precentage;
+                    $totalCount++;
+                }
+            }
+        }
+
+        $average = $totalCount > 0 
+            ? round($totalPercentage / $totalCount, 2) 
+            : 0;
+
+        $result[] = [
+            'project' => $project->name,
+            'percentage' => $average
+        ];
+    }
+
+    return response()->json($result);
 }
 }

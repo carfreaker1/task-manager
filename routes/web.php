@@ -141,6 +141,7 @@ Route::group(['middleware'=>'auth'],function(){
     Route::controller(DashboardController::class)->group(function(){
         Route::get('/dashboard/task-status', 'taskStatus')->name('dashboard.task.status');
         Route::get('index', 'index')->name('index');
+        Route::get('/dashboard/project-progress', 'projectProgres')->name('project.progres');
     });
 // 
 });

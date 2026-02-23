@@ -22,5 +22,10 @@ class AssignedTask extends Model
     public function userList(){
         return $this->belongsTo(User::class,'assigned_user');
     }
+    public function taskStatuses()
+    {
+        return $this->hasMany(TaskStatus::class, 'assigned_task');
+    }
+    
 
 }
