@@ -16,6 +16,7 @@ $(document).ready(function() {
         // Populate the form fields with existing data
         $('input[name="task_status_id"]').val(taskData.id);
         $('input[name="start_date"]').val(taskData.start_date);
+        $('input[name="end_date"]').val(taskData.start_date);
         $('input[name="sub_module"]').val(taskData.sub_module);
         $('textarea[name="summary"]').val(taskData.summary);
         $('input[name="functionality"]').val(taskData.functionality);

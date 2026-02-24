@@ -53,38 +53,139 @@ class DashboardController extends Controller
     }
 
     public function projectProgres()
-{
-    $projects = Project::with(['tasks.assignedTasks.taskStatuses'])->get();
+    {
+        $projects = Project::with(['tasks.assignedTasks.taskStatuses'])->get();
 
-    $result = [];
+        $result = [];
 
-    foreach ($projects as $project) {
+        foreach ($projects as $project) {
 
-        $totalPercentage = 0;
-        $totalCount = 0;
+            $totalPercentage = 0;
+            $totalCount = 0;
 
-        foreach ($project->tasks as $task) {
+            foreach ($project->tasks as $task) {
 
-            foreach ($task->assignedTasks as $assignedTask) {
+                foreach ($task->assignedTasks as $assignedTask) {
 
-                foreach ($assignedTask->taskStatuses as $status) {
+                    foreach ($assignedTask->taskStatuses as $status) {
 
-                    $totalPercentage += $status->completion_precentage;
-                    $totalCount++;
+                        $totalPercentage += $status->completion_precentage;
+                        $totalCount++;
+                    }
                 }
             }
+
+            $average = $totalCount > 0 
+                ? round($totalPercentage / $totalCount, 2) 
+                : 0;
+
+            $result[] = [
+                'project' => $project->name,
+                'percentage' => $average
+            ];
         }
 
-        $average = $totalCount > 0 
-            ? round($totalPercentage / $totalCount, 2) 
-            : 0;
+        return response()->json($result);
+    }
+    public function taskCompletionTrend()
+    {
+        // Sirf completed tasks
+        $tasks = TaskStatus::where('task_status', 3)
+            ->orderBy('updated_at', 'asc')
+            ->get()
+            ->groupBy(function ($task) {
+                return $task->updated_at->format('Y-m-d');
+            });
 
-        $result[] = [
-            'project' => $project->name,
-            'percentage' => $average
-        ];
+        $labels = [];
+        $values = [];
+
+        foreach ($tasks as $date => $taskGroup) {
+            $labels[] = $date;
+            $values[] = $taskGroup->count();
+        }
+
+        return response()->json([
+            'labels' => $labels,
+            'values' => $values,
+        ]);
+    }
+    public function employeePerformance()
+    {
+        $users = User::get();
+
+        $result = [];
+
+        foreach ($users as $user) {
+
+            $assignedCount = AssignedTask::where('assigned_user', $user->id)->count();
+
+            $completedCount = TaskStatus::whereHas('AssignTaskName', function ($q) use ($user) {
+                $q->where('assigned_user', $user->id);
+            })->where('task_status', 3)->count();
+
+            $pendingCount = $assignedCount - $completedCount;
+
+            $result[] = [
+                'employee'  => $user->name,
+                'assigned'  => $assignedCount,
+                'completed' => $completedCount,
+                'pending'   => max($pendingCount, 0),
+            ];
+        }
+
+        return response()->json($result);
     }
 
-    return response()->json($result);
-}
+    public function taskStatusStacked()
+    {
+        $projects = Project::with([
+            'tasks.assignedTasks.taskStatuses'
+        ])->get();
+
+        $labels = [];
+        $pending = [];
+        $inProgress = [];
+        $completed = [];
+
+        foreach ($projects as $project) {
+
+            $labels[] = $project->name;
+
+            $pendingCount = 0;
+            $inProgressCount = 0;
+            $completedCount = 0;
+
+            foreach ($project->tasks as $task) {
+                foreach ($task->assignedTasks as $assignedTask) {
+                    foreach ($assignedTask->taskStatuses as $status) {
+
+                        if ($status->task_status === '2') {
+                            $pendingCount++;
+                        }
+
+                        if ($status->task_status === '1') {
+                            $inProgressCount++;
+                        }
+
+                        if ($status->task_status === '3') {
+                            $completedCount++;
+                        }
+                    }
+                }
+            }
+
+            $pending[] = $pendingCount;
+            $inProgress[] = $inProgressCount;
+            $completed[] = $completedCount;
+        }
+
+        return response()->json([
+            'labels'       => $labels,
+            'pending'      => $pending,
+            'in_progress'  => $inProgress,
+            'completed'    => $completed,
+        ]);
+    }
+
 }

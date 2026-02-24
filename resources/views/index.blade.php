@@ -125,15 +125,15 @@
               <div class="card-header">
                 <h3 class="card-title">
                   <i class="fas fa-chart-pie mr-1"></i>
-                  Stats
+                  Task Status Distribution
                 </h3>
                 <div class="card-tools">
                   <ul class="nav nav-pills ml-auto">
                     <li class="nav-item">
-                      <a class="nav-link active" href="#revenue-chart" data-toggle="tab">Area</a>
+                      <a class="nav-link " href="#revenue-chart" data-toggle="tab">Area</a>
                     </li>
                     <li class="nav-item">
-                      <a class="nav-link" href="#sales-chart" data-toggle="tab">Donut</a>
+                      <a class="nav-link active" href="#sales-chart" data-toggle="tab">Donut</a>
                     </li>
                   </ul>
                 </div>
@@ -141,11 +141,11 @@
               <div class="card-body">
                 <div class="tab-content p-0">
                   <!-- Morris chart - Sales -->
-                  <div class="chart tab-pane active" id="revenue-chart"
+                  <div class="chart tab-pane " id="revenue-chart"
                        style="position: relative; height: 300px;">
                       <canvas id="revenue-chart-canvas" height="300" style="height: 300px;"></canvas>
                    </div>
-                  <div class="chart tab-pane" id="sales-chart" style="position: relative; height: 300px;">
+                  <div class="chart tab-pane active" id="sales-chart" style="position: relative; height: 300px;">
                     <canvas id="sales-chart-canvas" height="300" style="height: 300px;"></canvas>
                   </div>
                 </div>
@@ -173,6 +173,49 @@
               </div>
               <!-- /.card-body -->
             </div>
+            {{-- Employee performacnce BAR CHART --}}
+            <div class="card card-primary">
+              <div class="card-header">
+                <h3 class="card-title">Employee Performance Chart</h3>
+
+                <div class="card-tools">
+                  <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                    <i class="fas fa-minus"></i>
+                  </button>
+                  <button type="button" class="btn btn-tool" data-card-widget="remove">
+                    <i class="fas fa-times"></i>
+                  </button>
+                </div>
+              </div>
+              <div class="card-body">
+                <div class="chart"><div class="chartjs-size-monitor"><div class="chartjs-size-monitor-expand"><div class=""></div></div><div class="chartjs-size-monitor-shrink"><div class=""></div></div></div>
+                  <canvas id="barChartEPPerformance" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%; display: block; width: 488px;" width="488" height="250" class="chartjs-render-monitor"></canvas>
+                </div>
+              </div>
+              <!-- /.card-body -->
+            </div>
+            <!-- STACKED BAR CHART -->
+            <div class="card card-success">
+              <div class="card-header">
+                <h3 class="card-title">Deadline & Overdue Analysis</h3>
+
+                <div class="card-tools">
+                  <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                    <i class="fas fa-minus"></i>
+                  </button>
+                  <button type="button" class="btn btn-tool" data-card-widget="remove">
+                    <i class="fas fa-times"></i>
+                  </button>
+                </div>
+              </div>
+              <div class="card-body">
+                <div class="chart">
+                  <canvas id="stackedBarChart" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
+                </div>
+              </div>
+              <!-- /.card-body -->
+            </div>
+            <!-- /.card -->
             <!-- DIRECT CHAT -->
             <div class="card direct-chat direct-chat-primary">
               <div class="card-header">
@@ -561,7 +604,7 @@
               <div class="card-header border-0">
                 <h3 class="card-title">
                   <i class="fas fa-th mr-1"></i>
-                  Sales Graph
+                  Task Completion Trend Graph
                 </h3>
 
                 <div class="card-tools">
@@ -578,7 +621,7 @@
               </div>
               <!-- /.card-body -->
               <div class="card-footer bg-transparent">
-                <div class="row">
+                {{-- <div class="row">
                   <div class="col-4 text-center">
                     <input type="text" class="knob" data-readonly="true" value="20" data-width="60" data-height="60"
                            data-fgColor="#39CCCC">
@@ -600,7 +643,7 @@
                     <div class="text-white">In-Store</div>
                   </div>
                   <!-- ./col -->
-                </div>
+                </div> --}}
                 <!-- /.row -->
               </div>
               <!-- /.card-footer -->

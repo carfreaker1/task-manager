@@ -70,32 +70,158 @@ $(function () {
   
     // OPTIONAL: Auto refresh every 30 seconds
     setInterval(loadTaskProgres, 30000);
+    function employeePerformance(){
 
- //---------------------
- //- STACKED BAR CHART -
- //---------------------
- var stackedBarChartCanvas = $('#stackedBarChart').get(0).getContext('2d')
- var stackedBarChartData = $.extend(true, {}, barChartData)
+      $.ajax({
+          url: '/dashboard/employee-performance',
+          type: "GET",
+          success: function(response){
+  
+              let labels = [];
+              let assigned = [];
+              let completed = [];
+              let pending = [];
+  
+              response.forEach(function(item){
+                  labels.push(item.employee);
+                  assigned.push(item.assigned);
+                  completed.push(item.completed);
+                  pending.push(item.pending);
+              });
+  
+              var areaChartData = {
+                  labels: labels,
+                  datasets: [
+                      {
+                          label: 'Assigned Tasks',
+                          backgroundColor: 'rgba(60,141,188,0.9)',
+                          data: assigned
+                      },
+                      {
+                          label: 'Completed Tasks',
+                          backgroundColor: 'rgba(0,166,90,0.9)',
+                          data: completed
+                      },
+                      {
+                          label: 'Pending Tasks',
+                          backgroundColor: 'rgba(243,156,18,0.9)',
+                          data: pending
+                      }
+                  ]
+              };
+  
+              var barChartCanvas = $('#barChartEPPerformance').get(0).getContext('2d');
+  
+              if (window.employeeChart) {
+                  window.employeeChart.destroy();
+              }
+  
+              var barChartOptions = {
+                  responsive: true,
+                  maintainAspectRatio: false,
+                  scales: {
+                      yAxes: [{
+                          ticks: {
+                              beginAtZero: true,
+                              stepSize: 1
+                          }
+                      }]
+                  }
+              };
+  
+              window.employeeChart = new Chart(barChartCanvas, {
+                  type: 'bar',
+                  data: areaChartData,
+                  options: barChartOptions
+              });
+          }
+      });
+  };
+  
+  // Initial Load
+  employeePerformance();
+  
+  // 🔁 Auto refresh every 30 sec
+  setInterval(employeePerformance, 30000);
+ /* ================================
+   STACKED BAR CHART – TASK STATUS
+================================ */
 
- var stackedBarChartOptions = {
-   responsive              : true,
-   maintainAspectRatio     : false,
-   scales: {
-     xAxes: [{
-       stacked: true,
-     }],
-     yAxes: [{
-       stacked: true
-     }]
-   }
- }
+var stackedCtx = $('#stackedBarChart').get(0).getContext('2d');
+var stackedBarChart;
 
- new Chart(stackedBarChartCanvas, {
-   type: 'bar',
-   data: stackedBarChartData,
-   options: stackedBarChartOptions
- })
+function loadStackedTaskStatus() {
+  $.ajax({
+    url: '/dashboard/task-status-stacked', // Laravel route
+    type: 'GET',
+    success: function (response) {
+
+      var stackedBarChartData = {
+        labels: response.labels,
+        datasets: [
+          {
+            label: 'Pending',
+            backgroundColor: '#f39c12',
+            data: response.pending
+          },
+          {
+            label: 'In Progress',
+            backgroundColor: '#00c0ef',
+            data: response.in_progress
+          },
+          {
+            label: 'Completed',
+            backgroundColor: '#00a65a',
+            data: response.completed
+          }
+        ]
+      };
+
+      var stackedBarChartOptions = {
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: {
+          xAxes: [{
+            stacked: true
+          }],
+          yAxes: [{
+            stacked: true,
+            ticks: {
+              beginAtZero: true,
+              stepSize: 1
+            }
+          }]
+        },
+        legend: {
+          position: 'top'
+        }
+      };
+
+      // destroy old chart before redraw
+      if (stackedBarChart) {
+        stackedBarChart.destroy();
+      }
+
+      stackedBarChart = new Chart(stackedCtx, {
+        type: 'bar',
+        data: stackedBarChartData,
+        options: stackedBarChartOptions
+      });
+    },
+    error: function () {
+      console.log('Failed to load stacked task status data');
+    }
+  });
+}
+
+// Initial load
+loadStackedTaskStatus();
+
+// Auto refresh every 30 seconds
+setInterval(loadStackedTaskStatus, 30000);
 })
+
+
 $(function () {
   'use strict'
 
@@ -319,65 +445,84 @@ $(function () {
 
   // Sales graph chart
   var salesGraphChartCanvas = $('#line-chart').get(0).getContext('2d')
-  // $('#revenue-chart').get(0).getContext('2d');
+var salesGraphChart;
 
-  var salesGraphChartData = {
-    labels: ['2011 Q1', '2011 Q2', '2011 Q3', '2011 Q4', '2012 Q1', '2012 Q2', '2012 Q3', '2012 Q4', '2013 Q1', '2013 Q2'],
-    datasets: [
-      {
-        label: 'Digital Goods',
-        fill: false,
-        borderWidth: 2,
-        lineTension: 0,
-        spanGaps: true,
-        borderColor: '#efefef',
-        pointRadius: 3,
-        pointHoverRadius: 7,
-        pointColor: '#efefef',
-        pointBackgroundColor: '#efefef',
-        data: [2666, 2778, 4912, 3767, 6810, 5670, 4820, 15073, 10687, 8432]
+// function to load data via AJAX
+function loadTaskCompletionTrend() {
+
+  $.ajax({
+    url: "/dashboard/task-completion-trend", // Laravel route
+    type: "GET",
+    success: function (response) {
+
+      var salesGraphChartData = {
+        labels: response.labels, // 👈 dynamic dates
+        datasets: [
+          {
+            label: 'Tasks Completed',
+            fill: false,
+            borderWidth: 2,
+            lineTension: 0,
+            spanGaps: true,
+            borderColor: '#efefef',
+            pointRadius: 3,
+            pointHoverRadius: 7,
+            pointColor: '#efefef',
+            pointBackgroundColor: '#efefef',
+            data: response.values // 👈 dynamic counts
+          }
+        ]
       }
-    ]
-  }
 
-  var salesGraphChartOptions = {
-    maintainAspectRatio: false,
-    responsive: true,
-    legend: {
-      display: false
-    },
-    scales: {
-      xAxes: [{
-        ticks: {
-          fontColor: '#efefef'
+      var salesGraphChartOptions = {
+        maintainAspectRatio: false,
+        responsive: true,
+        legend: {
+          display: false
         },
-        gridLines: {
-          display: false,
-          color: '#efefef',
-          drawBorder: false
+        scales: {
+          xAxes: [{
+            ticks: {
+              fontColor: '#efefef'
+            },
+            gridLines: {
+              display: false,
+              color: '#efefef',
+              drawBorder: false
+            }
+          }],
+          yAxes: [{
+            ticks: {
+              stepSize: 1,
+              fontColor: '#efefef'
+            },
+            gridLines: {
+              display: true,
+              color: '#efefef',
+              drawBorder: false
+            }
+          }]
         }
-      }],
-      yAxes: [{
-        ticks: {
-          stepSize: 5000,
-          fontColor: '#efefef'
-        },
-        gridLines: {
-          display: true,
-          color: '#efefef',
-          drawBorder: false
-        }
-      }]
+      }
+
+      // 🔁 destroy old chart before redraw
+      if (salesGraphChart) {
+        salesGraphChart.destroy();
+      }
+
+      salesGraphChart = new Chart(salesGraphChartCanvas, {
+        type: 'line',
+        data: salesGraphChartData,
+        options: salesGraphChartOptions
+      });
     }
-  }
+  });
+}
 
-  // This will get the first returned node in the jQuery collection.
-  // eslint-disable-next-line no-unused-vars
-  var salesGraphChart = new Chart(salesGraphChartCanvas, { // lgtm[js/unused-local-variable]
-    type: 'line',
-    data: salesGraphChartData,
-    options: salesGraphChartOptions
-  })
+// Initial load
+loadTaskCompletionTrend();
+
+// ⏱ Auto refresh every 60 seconds
+setInterval(loadTaskCompletionTrend, 60000);
   
 })
-

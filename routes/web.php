@@ -142,6 +142,9 @@ Route::group(['middleware'=>'auth'],function(){
         Route::get('/dashboard/task-status', 'taskStatus')->name('dashboard.task.status');
         Route::get('index', 'index')->name('index');
         Route::get('/dashboard/project-progress', 'projectProgres')->name('project.progres');
+        Route::get('/dashboard/task-completion-trend', 'taskCompletionTrend')->name('task-completion-trend');
+        Route::get('/dashboard/employee-performance', 'employeePerformance')->name('employee.performance');
+        Route::get('/dashboard/task-status-stacked', 'taskStatusStacked')->name('task.status-stacked');
     });
 // 
 });
