@@ -1,0 +1,10 @@
+.project-table  tr td:first-child{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    line-height: 1;
+}
+
+.project-table  tr td:first-child input{
+    margin-right: 37px;
+}
