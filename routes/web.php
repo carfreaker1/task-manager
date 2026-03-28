@@ -170,5 +170,17 @@ Route::group(['middleware'=>'auth'],function(){
     Route::get('/create-meeting', [GoogleMeetController::class, 'createMeeting']);
     Route::get('/google-callback', [GoogleMeetController::class, 'handleGoogleCallback']);
     Route::get('/google-auth', [GoogleMeetController::class, 'redirectToGoogle']);
-// 
+    
+    // AI Chatbot Route
+    Route::post('/api/chatbot', [App\Http\Controllers\ChatBotController::class, 'handleChat'])->name('chatbot.send');
+    
+    Route::get('/test-gemini-models', function() {
+        $response = Illuminate\Support\Facades\Http::get('https://generativelanguage.googleapis.com/v1beta/models?key=' . config('services.gemini.key'));
+        return response()->json($response->json());
+    });
+    Route::get('/write-models-to-file', function() {
+        $response = Illuminate\Support\Facades\Http::get('https://generativelanguage.googleapis.com/v1beta/models?key=' . config('services.gemini.key'));
+        file_put_contents(public_path('models.json'), $response->body());
+        return "written";
+    });
 });
