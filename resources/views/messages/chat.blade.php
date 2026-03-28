@@ -373,7 +373,7 @@
                 }
             });
 
-            var currentUserId = {{ auth()->id() }};
+            var currentUserId = {{ (auth()->id()) }};
             var currentChatId = null;
 
             // FIX 1: subscribe to private channel
@@ -383,7 +383,8 @@
             channel.bind('MessageSent', function (data) {
                 if (data.message.from_id === currentChatId) {
                     //   appendMessage(data.message.sender.name, data.message.message);
-                    appendMessage(data.message.sender.name, data.message.message, data.message.created_at);
+                    // console.log(data);
+                    appendMessage(data.message.id, data.message.sender.name, data.message.message, data.message.created_at);
                 }
             });
 
@@ -399,7 +400,7 @@
                         let msgBox = document.getElementById('messages');
                         msgBox.innerHTML = "";
                         messages.forEach(m => {
-                            //   appendMessage(m.sender.name, m.message);
+                            //appendMessage(m.sender.name, m.message);
                             appendMessage(
                                 m.from_id,
                                 m.sender.name,

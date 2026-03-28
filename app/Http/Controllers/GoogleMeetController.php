@@ -45,7 +45,7 @@ class GoogleMeetController extends Controller
             ['token' => json_encode($token)]
         );
 
-        return redirect('/create-meeting');
+         return redirect()->route('listgooglemeetings');
     }
 
     // public function createMeeting()
