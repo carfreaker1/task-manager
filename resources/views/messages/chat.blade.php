@@ -373,7 +373,7 @@
                 }
             });
 
-            var currentUserId = {{ (auth()->id()) }};
+            var currentUserId = {{ auth()->id() }};
             var currentChatId = null;
 
             // FIX 1: subscribe to private channel
