@@ -1,6 +1,6 @@
 <?php
 
-$apiKey = 'AIzaSyDxYL5ca-DrBlTCI-PtWlIeYyNTvEfFBFo';
+$apiKey = config('services.google.api_key');
 $url = 'https://generativelanguage.googleapis.com/v1beta/models?key=' . $apiKey;
 
 $ch = curl_init($url);
