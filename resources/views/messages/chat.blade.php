@@ -355,7 +355,7 @@
         {{--
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"> --}}
 
-        <script src="https://js.pusher.com/8.2/pusher.min.js"></script>
+        {{-- <script src="https://js.pusher.com/8.2/pusher.min.js"></script>
         <script>
             function scrollToBottom() {
                 let messages = document.getElementById("messages");
@@ -564,5 +564,5 @@
             // fetch every 1 minute
             setInterval(fetchUserStatuses, 60000);
             fetchUserStatuses();
-        </script>
+        </script> --}}
 @endsection
