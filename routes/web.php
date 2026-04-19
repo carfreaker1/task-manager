@@ -143,6 +143,7 @@ Route::group(['middleware'=>'auth'],function(){
         Route::get('delete/timleline/{id}' ,'deleteTimeline')->name('deletetimeline');
         Route::get('view/google-meetings' ,'viewGoogleMeetings')->name('listgooglemeetings')->middleware('permission:manage_meeting');
         Route::post('schedule/google-meetings' ,'scheduleGoogleMeetings')->name('schedulegooglemeetings');
+        Route::get('delete/google-meetings/{id}' ,'deleteGoogleMeetings')->name('deleteGoogleMeetings');
     });
 
     Route::controller(ExcelPreviewController::class)->group(function(){

@@ -49,7 +49,7 @@
                       $(document).ready(function() {
                         $(document).Toasts('create', {
                           title: 'Project',
-                          body: 'Project Deleted Succesfully'
+                          body: 'Meeting Deleted Succesfully'
                       })
                       $(".toast").addClass('bg-danger')
                       });    
@@ -87,8 +87,10 @@
                       <th>Link</th>
                       <th>Note</th>
                       <th>Time</th>
+                      @if(Auth::user()->role_id == 1)
                       <th>Edit Time</th>
                       <th>Delete Meeting</th>
+                      @endif
                     </tr>
                     </thead>
                     <tbody>
@@ -100,8 +102,10 @@
                               <td>Join now:- <a target="_blank" href="{{ $taskMeeting->meet_link ?? '' }}"><img src="{{ asset('img\gmeet_image.png') }}" alt=""></a></td>
                               <td>{{ $taskMeeting->meeting_message ?? '' }}</td>
                               <td>{{ $taskMeeting->start_time ? \Carbon\Carbon::parse($taskMeeting->start_time)->format('d-m-Y H:i:s') : '' }}</td>
-                              <td><a href="{{ url('/edit/task/') . '/' . encrypt($taskMeeting->id) }}"><button type="button" class="btn btn-primary btn-sm">Edit task</button></a></td>
-                              <td><a href="{{ url('/delete/task/') . '/' . encrypt($taskMeeting->id) }}"><button type="button" class="btn btn-danger btn-sm">Delete task</button></a></td>
+                              @if(Auth::user()->role_id == 1)
+                              {{-- <td><a href="{{ url('/edit/task/') . '/' . encrypt($taskMeeting->id) }}"><button type="button" class="btn btn-primary btn-sm">Edit</button></a></td> --}}
+                              <td><a href="{{ url('/delete/google-meetings') . '/' . encrypt($taskMeeting->id) }}"><button type="button" class="btn btn-danger btn-sm">Delete</button></a></td>
+                              @endif
                             </tr>
                         @endforeach
                     </tbody>

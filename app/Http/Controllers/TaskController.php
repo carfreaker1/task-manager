@@ -364,4 +364,9 @@ class TaskController extends Controller
         // dd($taskMeeting);   
         return view('Meetings.meetinglist',compact('taskMeetings','employees'));
     }
+    public function deleteGoogleMeetings(){
+        $id = decrypt($id);
+        TaskMeeting::where('id', $id)->delete();
+        return  redirect()->back()->with('deletetime', 'Time Line Deleted Succesfully');
+    }
 }
