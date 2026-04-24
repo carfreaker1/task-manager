@@ -213,6 +213,18 @@ class TaskController extends Controller
                 'start_time' => $request->start,
                 'end_time' => $request->end
             ]);
+            $users = User::whereIn('id', $request->assigned_user)->get();
+            foreach ($users as $user) {
+                Mail::to($user->email)->queue(
+                    new MeetingAssignedMail(
+                        $user,
+                        $meetLink,
+                        $request->meeting_message,
+                        $request->start,
+                        $request->end
+                    )
+                );
+            }
         DB::commit();
             return redirect()->back()->with('success', 'Meeting Created Successfully');
         } catch (Exception $e) {
